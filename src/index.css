@@ -1,0 +1,88 @@
+/* ══════════════════════════════════════════════════════════════
+   CAPTAINCOOL AI — MASTER GLOBAL STYLING SYSTEM
+   Designed for National-Level Hackathons with High Contrast
+   ══════════════════════════════════════════════════════════════ */
+
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap');
+
+:root {
+  /* Color Palette (Deep Space Theme with Glass Glow) */
+  --bg-primary: #0a0b10;
+  --bg-surface: rgba(18, 20, 32, 0.65);
+  --bg-panel: rgba(28, 30, 48, 0.8);
+  
+  --color-border: rgba(255, 255, 255, 0.08);
+  --color-border-glow: rgba(114, 9, 183, 0.4);
+  
+  /* Text Colors (High Contrast) */
+  --text-primary: #f8fafc;
+  --text-secondary: #94a3b8;
+  --text-muted: #64748b;
+  
+  /* Accent Colors */
+  --accent-purple: #7209b7;
+  --accent-pink: #f72585;
+  --accent-blue: #4895ef;
+  --accent-teal: #06d6a0;
+  --accent-orange: #ff6b35;
+  --accent-gold: #ffc800;
+
+  /* Font Families */
+  --font-sans: 'Plus Jakarta Sans', system-ui, sans-serif;
+  --font-heading: 'Outfit', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+
+  font-family: var(--font-sans);
+  color: var(--text-primary);
+  background-color: var(--bg-primary);
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background-image: 
+    radial-gradient(at 0% 0%, rgba(114, 9, 183, 0.15) 0px, transparent 50%),
+    radial-gradient(at 100% 100%, rgba(247, 37, 133, 0.15) 0px, transparent 50%);
+  background-attachment: fixed;
+  min-height: 100vh;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg-primary);
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--accent-purple);
+}
+
+/* Glassmorphism Card System */
+.glass-panel {
+  background: var(--bg-surface);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--color-border);
+  border-radius: 16px;
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.glass-panel:hover {
+  border-color: var(--color-border-glow);
+  box-shadow: 0 8px 32px 0 rgba(114, 9, 183, 0.15);
+}
+
+/* Typography styles */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin: 0;
+}
