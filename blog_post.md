@@ -1,4 +1,4 @@
-# 🏏 CaptainCool AI — Real-Time Multi-Agent IPL Strategy Swarm
+# 🏏 TactiXI-AI — Real-Time Multi-Agent IPL Strategy Swarm
 
 > **How we built a context-aware strategic co-pilot for IPL dugouts, powered by Google Gemini 2.5, the Agent Development Kit (ADK), and live mathematical run-rate telemetry.**
 
@@ -7,7 +7,7 @@
 ## 💡 The Inspiration
 Cricket is no longer just a game of physical prowess; it is a game of high-dimensional numbers, millisecond decision-making, and structural tactics. A single ball can swing a team’s win probability by 30%. While head coaches and captains rely on intuition and basic stats sheets in the dugout, we saw an opportunity to build a **real-time AI tactical co-pilot** that behaves like a full war-room of cricket analysts.
 
-**CaptainCool AI** is a state-of-the-art Multi-Agent Swarm that ingests live match states (score, wickets, overs, stadium boundary dimensions, pitch conditions, dew factor) and orchestrates a sequential debate between highly specialized AI roles to formulate the optimal captain’s decision.
+**TactiXI-AI** is a state-of-the-art Multi-Agent Swarm that ingests live match states (score, wickets, overs, stadium boundary dimensions, pitch conditions, dew factor) and orchestrates a sequential debate between highly specialized AI roles to formulate the optimal captain’s decision.
 
 ---
 
@@ -71,6 +71,6 @@ Designed to look stunning on high-contrast projector displays at the national ha
 ---
 
 ## 🚀 Impact & Future Scope
-By uniting **Multi-Agent generative debate** with **grounded deterministic math matrices**, CaptainCool AI proves how agentic swarms can serve as direct decision-support tools in professional sports. Future expansions include integrating live ball-by-ball web scraping from ESPNCricinfo and feeding real-time player fatigue biometric telemetry!
+By uniting **Multi-Agent generative debate** with **grounded deterministic math matrices**, TactiXI-AI proves how agentic swarms can serve as direct decision-support tools in professional sports. Future expansions include integrating live ball-by-ball web scraping from ESPNCricinfo and feeding real-time player fatigue biometric telemetry!
 
 *Built with passion, coffee, and agentic AI for the National Developer Hackathon! 🏆*

@@ -225,7 +225,7 @@ function App() {
         <div className="flex justify-between items-center w-full px-margin-desktop py-4">
           <div className="flex items-center gap-6">
             <span className="text-headline-md font-black tracking-tighter text-primary uppercase">
-              CRICKET AI COMMAND
+              TactiXI-AI COMMAND
             </span>
             <div className="hidden md:flex items-center gap-4 text-on-surface-variant">
               <span className="text-label-sm px-3 py-1 bg-surface-container rounded-full border border-outline-variant/30 flex items-center gap-2">
