@@ -20,6 +20,8 @@ export interface MatchState {
   pitch_condition: string;
   dew: string;
   bowlers_used: string;
+  recent_overs?: string;
+  context?: string;
 }
 
 export interface MathMetrics {

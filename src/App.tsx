@@ -34,6 +34,8 @@ function App() {
   const [pitchCondition, setPitchCondition] = useState<string>("Turning");
   const [dew, setDew] = useState<string>("None");
   const [bowlersUsed, setBowlersUsed] = useState<string>("Bumrah: 3\nPathirana: 3\nJadeja: 4\n");
+  const [recentOvers, setRecentOvers] = useState<string>("8, 12, 6, 15");
+  const [matchContext, setMatchContext] = useState<string>("");
 
   const [captainMode, setCaptainMode] = useState<string>("Dhoni");
 
@@ -162,7 +164,9 @@ function App() {
       impact_player_available: false,
       pitch_condition: pitchCondition,
       dew,
-      bowlers_used: bowlersUsed
+      bowlers_used: bowlersUsed,
+      recent_overs: recentOvers,
+      context: matchContext
     };
 
     const orchestrator = new Orchestrator(apiKey);
@@ -238,7 +242,9 @@ function App() {
       impact_player_available: false,
       pitch_condition: pitchCondition,
       dew,
-      bowlers_used: bowlersUsed
+      bowlers_used: bowlersUsed,
+      recent_overs: recentOvers,
+      context: matchContext
     };
 
     try {
@@ -1363,6 +1369,113 @@ function App() {
                 />
               </div>
             </div>
+
+            <hr className="border-outline-variant/30" />
+
+            {/* Bowler Details */}
+            <div>
+              <label className="text-[10px] text-on-surface-variant font-bold uppercase tracking-widest mb-1.5 block">Last Bowler</label>
+              <input 
+                type="text"
+                disabled={isLiveSync}
+                className="w-full bg-[#131922] border border-outline-variant/30 rounded-lg p-2.5 text-sm text-white focus:border-primary disabled:opacity-50 transition-colors"
+                value={bowler}
+                onChange={(e) => setBowler(e.target.value)}
+              />
+            </div>
+
+            <div>
+              <label className="text-[10px] text-on-surface-variant font-bold uppercase tracking-widest mb-1.5 block">Available Bowlers (Comma-Separated)</label>
+              <input 
+                type="text"
+                disabled={isLiveSync}
+                className="w-full bg-[#131922] border border-outline-variant/30 rounded-lg p-2.5 text-sm text-white focus:border-primary disabled:opacity-50 transition-colors"
+                value={bowlersUsed}
+                onChange={(e) => setBowlersUsed(e.target.value)}
+              />
+            </div>
+
+            {/* Conditions */}
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="text-[10px] text-on-surface-variant font-bold uppercase tracking-widest mb-1.5 block">Venue</label>
+                <select 
+                  disabled={isLiveSync}
+                  className="w-full bg-[#131922] border border-outline-variant/30 rounded-lg p-2.5 text-sm text-white focus:border-primary appearance-none disabled:opacity-50 transition-colors"
+                  value={venue}
+                  onChange={(e) => setVenue(e.target.value)}
+                >
+                  <option value="Wankhede Stadium">Wankhede Stadium</option>
+                  <option value="M. Chinnaswamy Stadium">M. Chinnaswamy Stadium</option>
+                  <option value="MA Chidambaram Stadium">MA Chidambaram Stadium</option>
+                  <option value="Eden Gardens">Eden Gardens</option>
+                  <option value="Arun Jaitley Stadium">Arun Jaitley</option>
+                  <option value="Narendra Modi Stadium">Narendra Modi</option>
+                </select>
+              </div>
+              <div>
+                <label className="text-[10px] text-on-surface-variant font-bold uppercase tracking-widest mb-1.5 block">Pitch</label>
+                <select 
+                  disabled={isLiveSync}
+                  className="w-full bg-[#131922] border border-outline-variant/30 rounded-lg p-2.5 text-sm text-white focus:border-primary appearance-none disabled:opacity-50 transition-colors"
+                  value={pitchCondition}
+                  onChange={(e) => setPitchCondition(e.target.value)}
+                >
+                  <option value="Turning">Turning</option>
+                  <option value="Flat">Flat</option>
+                  <option value="Seaming">Seaming</option>
+                  <option value="Two-Paced">Two-Paced</option>
+                </select>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="text-[10px] text-on-surface-variant font-bold uppercase tracking-widest mb-1.5 block">Dew Factor</label>
+                <select 
+                  disabled={isLiveSync}
+                  className="w-full bg-[#131922] border border-outline-variant/30 rounded-lg p-2.5 text-sm text-white focus:border-primary appearance-none disabled:opacity-50 transition-colors"
+                  value={dew}
+                  onChange={(e) => setDew(e.target.value)}
+                >
+                  <option value="None">None</option>
+                  <option value="Light">Light</option>
+                  <option value="Heavy">Heavy</option>
+                </select>
+              </div>
+              <div>
+                <label className="text-[10px] text-on-surface-variant font-bold uppercase tracking-widest mb-1.5 block">Recent Overs</label>
+                <input 
+                  type="text"
+                  disabled={isLiveSync}
+                  className="w-full bg-[#131922] border border-outline-variant/30 rounded-lg p-2.5 text-sm text-white focus:border-primary disabled:opacity-50 transition-colors"
+                  value={recentOvers}
+                  onChange={(e) => setRecentOvers(e.target.value)}
+                />
+              </div>
+            </div>
+
+            {/* Additional Context */}
+            <div>
+              <label className="text-[10px] text-on-surface-variant font-bold uppercase tracking-widest mb-1.5 block">Additional Context (Optional)</label>
+              <textarea 
+                rows={3}
+                disabled={isLiveSync}
+                className="w-full bg-[#131922] border border-outline-variant/30 rounded-lg p-2.5 text-sm text-white focus:border-primary disabled:opacity-50 transition-colors resize-none"
+                value={matchContext}
+                onChange={(e) => setMatchContext(e.target.value)}
+                placeholder="e.g., Bumrah just bowled a maiden, Jadeja looking shaky against short balls..."
+              />
+            </div>
+
+            {/* Execute Button */}
+            <button 
+              onClick={handleSimulate}
+              disabled={isLoading || isLiveSync}
+              className="mt-2 w-full py-4 bg-[#0ddf61] text-black rounded-xl font-bold tracking-widest text-[13px] uppercase hover:bg-[#0ddf61]/90 active:scale-95 transition-all shadow-[0_0_20px_rgba(13,223,97,0.3)] disabled:opacity-50 disabled:scale-100 flex items-center justify-center gap-2"
+            >
+              🧠 Get Captain's Decision
+            </button>
           </div>
         </aside>
 
