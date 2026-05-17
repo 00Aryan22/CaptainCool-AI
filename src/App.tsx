@@ -1184,6 +1184,188 @@ function App() {
           )}
 
         </main>
+
+        {/* ════════════════════════════════════════════════════════
+           RIGHT SIDEBAR: MATCH STATE COMMAND CENTER
+           ════════════════════════════════════════════════════════ */}
+        <aside className="bg-[#0a1118]/90 w-[320px] 2xl:w-[350px] rounded-l-xl border-l border-primary/20 shadow-[-10px_0_20px_rgba(0,0,0,0.5)] flex-col h-full overflow-y-auto hidden xl:flex shrink-0">
+          <div className="flex border-b border-outline-variant/30 text-sm font-bold bg-surface-container-lowest sticky top-0 z-10">
+            <button className="flex-1 py-4 border-b-2 border-[#2ff801] text-[#2ff801] flex items-center justify-center gap-2 bg-white/5">
+              📋 Match State
+            </button>
+            <button className="flex-1 py-4 text-on-surface-variant hover:text-white transition-colors flex items-center justify-center gap-2">
+              📊 Strategy Log
+            </button>
+            <div className="flex items-center px-3 bg-surface-container-lowest">
+              <span className="bg-[#022100] text-[#2ff801] px-3 py-1 rounded-full text-[10px] font-black tracking-widest border border-[#0f6d00] uppercase shadow-[0_0_10px_rgba(47,248,1,0.2)]">
+                {innings === 1 ? "1st" : "2nd"} Innings
+              </span>
+            </div>
+          </div>
+
+          <div className="p-5 flex flex-col gap-6">
+            {/* Scenarios */}
+            <div className="flex flex-wrap gap-2">
+              <button 
+                onClick={() => { setScore(180); setWickets(4); setOver(18.2); setInnings(2); setTarget(200); }}
+                disabled={isLiveSync}
+                className="px-3 py-1.5 bg-surface-container border border-outline-variant/30 rounded-full text-[11px] text-on-surface-variant hover:text-white hover:border-primary transition-all disabled:opacity-50"
+              >
+                💥 Death Over Chase
+              </button>
+              <button 
+                onClick={() => { setScore(24); setWickets(3); setOver(3.1); setInnings(1); }}
+                disabled={isLiveSync}
+                className="px-3 py-1.5 bg-surface-container border border-outline-variant/30 rounded-full text-[11px] text-on-surface-variant hover:text-white hover:border-primary transition-all disabled:opacity-50"
+              >
+                ⚡ PP Collapse
+              </button>
+              <button 
+                onClick={() => { setScore(110); setWickets(2); setOver(12.0); }}
+                disabled={isLiveSync}
+                className="px-3 py-1.5 bg-surface-container border border-outline-variant/30 rounded-full text-[11px] text-on-surface-variant hover:text-white hover:border-primary transition-all disabled:opacity-50"
+              >
+                🚙 Middle Stall
+              </button>
+              <button 
+                onClick={() => { setScore(210); setWickets(7); setOver(19.0); }}
+                disabled={isLiveSync}
+                className="px-3 py-1.5 bg-surface-container border border-outline-variant/30 rounded-full text-[11px] text-on-surface-variant hover:text-white hover:border-primary transition-all disabled:opacity-50"
+              >
+                🔥 Last Over
+              </button>
+            </div>
+
+            {/* Teams */}
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="text-[10px] text-on-surface-variant font-bold uppercase tracking-widest mb-1.5 block">Batting Team</label>
+                <select 
+                  disabled={isLiveSync}
+                  className="w-full bg-[#131922] border border-outline-variant/30 rounded-lg p-2.5 text-sm text-white focus:border-primary focus:ring-0 appearance-none disabled:opacity-50 transition-colors"
+                  value={battingTeam}
+                  onChange={(e) => setBattingTeam(e.target.value)}
+                >
+                  <option value="CSK">CSK</option>
+                  <option value="MI">MI</option>
+                  <option value="RCB">RCB</option>
+                  <option value="KKR">KKR</option>
+                </select>
+              </div>
+              <div>
+                <label className="text-[10px] text-on-surface-variant font-bold uppercase tracking-widest mb-1.5 block">Bowling Team</label>
+                <select 
+                  disabled={isLiveSync}
+                  className="w-full bg-[#131922] border border-outline-variant/30 rounded-lg p-2.5 text-sm text-white focus:border-primary focus:ring-0 appearance-none disabled:opacity-50 transition-colors"
+                  value={bowlingTeam}
+                  onChange={(e) => setBowlingTeam(e.target.value)}
+                >
+                  <option value="CSK">CSK</option>
+                  <option value="MI">MI</option>
+                  <option value="RCB">RCB</option>
+                  <option value="KKR">KKR</option>
+                </select>
+              </div>
+            </div>
+
+            {/* Score State */}
+            <div className="grid grid-cols-3 gap-3">
+              <div>
+                <label className="text-[10px] text-on-surface-variant font-bold uppercase tracking-widest mb-1.5 block">Runs</label>
+                <input 
+                  type="number"
+                  disabled={isLiveSync}
+                  className="w-full bg-[#131922] border border-outline-variant/30 rounded-lg p-2.5 text-sm text-white focus:border-primary disabled:opacity-50 transition-colors"
+                  value={score}
+                  onChange={(e) => setScore(Number(e.target.value))}
+                />
+              </div>
+              <div>
+                <label className="text-[10px] text-on-surface-variant font-bold uppercase tracking-widest mb-1.5 block">Wickets</label>
+                <input 
+                  type="number"
+                  disabled={isLiveSync}
+                  className="w-full bg-[#131922] border border-outline-variant/30 rounded-lg p-2.5 text-sm text-white focus:border-primary disabled:opacity-50 transition-colors"
+                  value={wickets}
+                  onChange={(e) => setWickets(Number(e.target.value))}
+                />
+              </div>
+              <div>
+                <label className="text-[10px] text-on-surface-variant font-bold uppercase tracking-widest mb-1.5 block">Overs</label>
+                <input 
+                  type="number"
+                  step="0.1"
+                  disabled={isLiveSync}
+                  className="w-full bg-[#131922] border border-outline-variant/30 rounded-lg p-2.5 text-sm text-white focus:border-primary disabled:opacity-50 transition-colors"
+                  value={over}
+                  onChange={(e) => setOver(Number(e.target.value))}
+                />
+              </div>
+            </div>
+
+            {/* Innings */}
+            <div>
+              <label className="text-[10px] text-on-surface-variant font-bold uppercase tracking-widest mb-1.5 block">Innings</label>
+              <select 
+                disabled={isLiveSync}
+                className="w-[150px] bg-[#131922] border border-outline-variant/30 rounded-lg p-2.5 text-sm text-white focus:border-primary appearance-none disabled:opacity-50 transition-colors"
+                value={innings}
+                onChange={(e) => setInnings(Number(e.target.value))}
+              >
+                <option value={1}>1st Innings</option>
+                <option value={2}>2nd Innings</option>
+              </select>
+            </div>
+
+            <hr className="border-outline-variant/30" />
+
+            {/* Batsmen */}
+            <div className="grid grid-cols-5 gap-3">
+              <div className="col-span-3">
+                <label className="text-[10px] text-on-surface-variant font-bold uppercase tracking-widest mb-1.5 block">Batsman 1 (Name)</label>
+                <input 
+                  type="text"
+                  disabled={isLiveSync}
+                  className="w-full bg-[#131922] border border-outline-variant/30 rounded-lg p-2.5 text-sm text-white focus:border-primary disabled:opacity-50 transition-colors"
+                  value={striker}
+                  onChange={(e) => setStriker(e.target.value)}
+                />
+              </div>
+              <div className="col-span-2">
+                <label className="text-[10px] text-on-surface-variant font-bold uppercase tracking-widest mb-1.5 block">Runs (B1)</label>
+                <input 
+                  type="number"
+                  disabled={isLiveSync}
+                  className="w-full bg-[#131922] border border-outline-variant/30 rounded-lg p-2.5 text-sm text-white focus:border-primary disabled:opacity-50 transition-colors"
+                  defaultValue={34}
+                />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-5 gap-3">
+              <div className="col-span-3">
+                <label className="text-[10px] text-on-surface-variant font-bold uppercase tracking-widest mb-1.5 block">Batsman 2 (Name)</label>
+                <input 
+                  type="text"
+                  disabled={isLiveSync}
+                  className="w-full bg-[#131922] border border-outline-variant/30 rounded-lg p-2.5 text-sm text-white focus:border-primary disabled:opacity-50 transition-colors"
+                  value={nonStriker}
+                  onChange={(e) => setNonStriker(e.target.value)}
+                />
+              </div>
+              <div className="col-span-2">
+                <label className="text-[10px] text-on-surface-variant font-bold uppercase tracking-widest mb-1.5 block">Runs (B2)</label>
+                <input 
+                  type="number"
+                  disabled={isLiveSync}
+                  className="w-full bg-[#131922] border border-outline-variant/30 rounded-lg p-2.5 text-sm text-white focus:border-primary disabled:opacity-50 transition-colors"
+                  defaultValue={12}
+                />
+              </div>
+            </div>
+          </div>
+        </aside>
+
       </div>
 
       {/* ════════════════════════════════════════════════════════
