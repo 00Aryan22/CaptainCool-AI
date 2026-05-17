@@ -1,12 +1,139 @@
 <!doctype html>
-<html lang="en">
+<html class="dark" lang="en">
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>CaptainCool AI — Multi-Agent IPL Strategy Swarm</title>
+    <title>Captain Cool | CRICKET AI COMMAND</title>
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    
+    <!-- Google Fonts & Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;900&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+
+    <style>
+      body {
+        font-family: 'Montserrat', sans-serif;
+        background-color: #10141a;
+        color: #dfe2eb;
+      }
+      .glass-panel {
+        background: rgba(28, 32, 38, 0.7);
+        backdrop-filter: blur(20px);
+        border: 1px solid rgba(164, 230, 255, 0.1);
+      }
+      .neon-glow-primary {
+        box-shadow: 0 0 15px rgba(76, 214, 255, 0.3);
+      }
+      .gemini-gradient {
+        background: linear-gradient(135deg, #4cd6ff 0%, #a4e6ff 50%, #d7ffc5 100%);
+      }
+      .pitch-texture {
+        background-image: radial-gradient(circle at 2px 2px, rgba(255,255,255,0.05) 1px, transparent 0);
+        background-size: 24px 24px;
+      }
+      .material-symbols-outlined {
+        font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      }
+    </style>
+    
+    <script>
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+              "primary-fixed-dim": "#4cd6ff",
+              "inverse-on-surface": "#2d3137",
+              "error": "#ffb4ab",
+              "on-primary-fixed": "#001f28",
+              "surface-tint": "#4cd6ff",
+              "primary": "#a4e6ff",
+              "surface-dim": "#10141a",
+              "surface": "#10141a",
+              "on-secondary-fixed-variant": "#095300",
+              "surface-container-lowest": "#0a0e14",
+              "tertiary-fixed-dim": "#e9c400",
+              "on-tertiary-fixed": "#221b00",
+              "on-primary": "#003543",
+              "tertiary-fixed": "#ffe16d",
+              "secondary-fixed": "#79ff5b",
+              "surface-container-highest": "#31353c",
+              "tertiary-container": "#e1be00",
+              "primary-container": "#00d1ff",
+              "error-container": "#93000a",
+              "on-tertiary-fixed-variant": "#544600",
+              "on-tertiary": "#3a3000",
+              "on-primary-fixed-variant": "#004e60",
+              "outline": "#859399",
+              "surface-container": "#1c2026",
+              "inverse-surface": "#dfe2eb",
+              "on-error": "#690005",
+              "on-secondary-container": "#0f6d00",
+              "secondary-fixed-dim": "#2ae500",
+              "secondary-container": "#2ff801",
+              "on-background": "#dfe2eb",
+              "tertiary": "#ffda35",
+              "background": "#10141a",
+              "primary-fixed": "#b7eaff",
+              "outline-variant": "#3c494e",
+              "on-tertiary-container": "#5d4d00",
+              "on-secondary": "#053900",
+              "on-surface": "#dfe2eb",
+              "surface-bright": "#353940",
+              "secondary": "#d7ffc5",
+              "surface-variant": "#31353c",
+              "on-error-container": "#ffdad6",
+              "on-secondary-fixed": "#022100",
+              "on-surface-variant": "#bbc9cf",
+              "surface-container-low": "#181c22",
+              "inverse-primary": "#00677f",
+              "on-primary-container": "#00566a",
+              "surface-container-high": "#262a31"
+            },
+            "borderRadius": {
+              "DEFAULT": "0.25rem",
+              "lg": "0.5rem",
+              "xl": "0.75rem",
+              "full": "9999px"
+            },
+            "spacing": {
+              "lg": "40px",
+              "xs": "4px",
+              "md": "24px",
+              "margin-desktop": "48px",
+              "base": "8px",
+              "margin-mobile": "16px",
+              "gutter": "24px",
+              "sm": "12px",
+              "xl": "64px"
+            },
+            "fontFamily": {
+              "label-sm": ["Montserrat"],
+              "body-lg": ["Montserrat"],
+              "headline-md": ["Montserrat"],
+              "headline-lg-mobile": ["Montserrat"],
+              "display-lg": ["Montserrat"],
+              "body-md": ["Montserrat"],
+              "headline-lg": ["Montserrat"]
+            },
+            "fontSize": {
+              "label-sm": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+              "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+              "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+              "headline-lg-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "700"}],
+              "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "900"}],
+              "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+              "headline-lg": ["32px", {"lineHeight": "40px", "fontWeight": "700"}]
+            }
+          },
+        },
+      }
+    </script>
   </head>
-  <body>
+  <body class="bg-background text-on-surface selection:bg-primary-container selection:text-on-primary-container">
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
