@@ -259,4 +259,81 @@ export class Orchestrator {
       metrics
     };
   }
+
+  /**
+   * specialized real-time question handler answering queries with live context
+   */
+  public async askQuestion(
+    question: string,
+    matchState: MatchState,
+    captainMode: string,
+    history: any[]
+  ): Promise<string> {
+    const metrics = computeWinPressureMatrix(
+      matchState.innings,
+      matchState.target,
+      matchState.score,
+      matchState.over,
+      matchState.wickets
+    );
+
+    const captainProfile = CAPTAIN_DNA[captainMode as keyof typeof CAPTAIN_DNA] || { name: captainMode, profile: "Tactical leadership" };
+
+    const systemPrompt = `You are the lead AI strategist representing Captain ${captainMode}'s leadership DNA.
+You are sitting in the dugout during an active IPL match, advising the coach and team in real-time.
+Your goal is to answer any custom tactical question (e.g. impact player swaps, field placements, bowling changes, bowler workload) with extreme strategic depth and professional terminology.
+
+CAPTAIN LEADERSHIP DNA PROFILE:
+- ${JSON.stringify(captainProfile)}
+
+CURRENT LIVE TELEMETRY:
+- Venue: ${matchState.venue}
+- Innings: ${matchState.innings}
+- Target: ${matchState.target}
+- Score: ${matchState.score}/${matchState.wickets} in ${matchState.over} overs
+- Teams: ${matchState.batting_team} vs ${matchState.bowling_team}
+- Striker: ${matchState.striker} | Non-Striker: ${matchState.non_striker}
+- Current Bowler: ${matchState.bowler}
+- Pitch Condition: ${matchState.pitch_condition}
+- Dew Factor: ${matchState.dew}
+- Math Metrics: CRR=${metrics.currentRunRate}, RRR=${metrics.requiredRunRate}, WinProb=${metrics.winProbabilityBatting}%, WicketPressure=${metrics.pressureIndex}%
+
+DECISION HISTORY LOG (MEMORY ACROSS OVERS):
+${JSON.stringify(history.map(h => ({ over: h.over, score: h.score, recommendation: h.call })))}
+
+Respond with professional authority, incorporating computed run-rate margins and stadium dimensions. Keep the response to 2-3 concise paragraphs, highlighting strategic player changes or swaps!`;
+
+    const userMessage = `User question: "${question}"`;
+
+    try {
+      return await this.callAgent("gemini-2.5-flash", systemPrompt, userMessage, 0.4);
+    } catch (err) {
+      console.warn("API Call failed in chatbot. Generating dynamic rule-based expert tactical response:", err);
+      
+      // Highly context-aware local rule-based strategist response if offline or mock
+      const qLower = question.toLowerCase();
+      if (qLower.includes("swap") || qLower.includes("replace") || qLower.includes("impact")) {
+        return `### 🧠 Lead AI Strategist (${captainMode} DNA) Live Recommendation:
+On this ${matchState.pitch_condition} surface at ${matchState.venue}, with batting side's win probability standing at ${metrics.winProbabilityBatting}%, the optimal player swap consists of introducing a specialist death-over weapon.
+
+With ${matchState.wickets} wickets lost, we should look to swap out a bowler who completed their workload for an aggressive finisher (like a specialist batsman) if chasing, or an extra spinner to choke ${matchState.striker} from the nursery end.
+
+I suggest swapping ${matchState.bowler} once their spell is completed to maintain tactical pressure!`;
+      }
+      
+      if (qLower.includes("spin") || qLower.includes("spinner") || qLower.includes("bowling")) {
+        return `### 🧠 Lead AI Strategist (${captainMode} DNA) Live Recommendation:
+Given the ${matchState.pitch_condition} turf characteristics at ${matchState.venue}, introducing spin at Over ${matchState.over} is statistically highly favored.
+
+MS Dhoni's profiling suggests spin cutters outside the off-stump work best to counter any dew. We must ensure the field shifts (deep mid-wicket and long-on active) before the spinner delivers, choking the batsman's scoring options.`;
+      }
+
+      return `### 🧠 Lead AI Strategist (${captainMode} DNA) Live Recommendation:
+Analyzing your question: "${question}".
+Current telemetry indicates: Score is ${matchState.score}/${matchState.wickets} in Over ${matchState.over}. Win Probability stands at ${metrics.winProbabilityBatting}% with a Pressure Index of ${metrics.pressureIndex}%.
+
+Under ${captainMode}'s strategic doctrine, I advise maintaining strict boundary protection. Flatter seam deliveries outside off-stump remain the statistically optimal option to contain ${matchState.striker} and Dinesh Karthik.`;
+    }
+  }
 }
+

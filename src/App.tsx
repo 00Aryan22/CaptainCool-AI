@@ -136,20 +136,73 @@ function App() {
   };
 
   // ── Handle Custom Inquiry Form ──────────────────────────────
-  const handleSendInquiry = (e: React.FormEvent) => {
+  const handleSendInquiry = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!chatInquiry.trim()) return;
 
+    const userQuestion = chatInquiry;
+    setChatInquiry("");
+
+    // Append user question
     setCustomInquiries(prev => [
       ...prev,
-      { sender: "You", msg: chatInquiry, type: "user" },
+      { sender: "You", msg: userQuestion, type: "user" }
+    ]);
+
+    // Append a temporary loading bubble
+    setCustomInquiries(prev => [
+      ...prev,
       { 
         sender: `Strategist (${captainMode} DNA)`, 
-        msg: `Analyzing inquiry: "${chatInquiry}". Utilizing computed win matrix (${liveMetrics.winProbabilityBatting}% win prob) and stadium parameters (${venue}), I advise maintaining current fields. Flatter trajectory seam deliveries outside off-stump remain the statistically optimal option for Over ${over}.`,
-        type: "lead" 
+        msg: "🔄 Lead AI is compiling live scoreboard metrics and historic decision matrices to formulate your answer...", 
+        type: "lead-loading" 
       }
     ]);
-    setChatInquiry("");
+
+    const matchState: MatchState = {
+      venue,
+      innings,
+      target,
+      score,
+      wickets,
+      over,
+      batting_team: battingTeam,
+      bowling_team: bowlingTeam,
+      striker,
+      non_striker: nonStriker,
+      bowler,
+      impact_player_available: false,
+      pitch_condition: pitchCondition,
+      dew,
+      bowlers_used: bowlersUsed
+    };
+
+    try {
+      const orchestrator = new Orchestrator(apiKey);
+      const reply = await orchestrator.askQuestion(userQuestion, matchState, captainMode, history);
+
+      // Replace the loading bubble with the actual AI response
+      setCustomInquiries(prev => {
+        const filtered = prev.filter(c => c.type !== "lead-loading");
+        return [
+          ...filtered,
+          { sender: `Strategist (${captainMode} DNA)`, msg: reply, type: "lead" }
+        ];
+      });
+    } catch (err) {
+      console.error(err);
+      setCustomInquiries(prev => {
+        const filtered = prev.filter(c => c.type !== "lead-loading");
+        return [
+          ...filtered,
+          { 
+            sender: `Strategist (${captainMode} DNA)`, 
+            msg: `⚠️ Connection to captain swarm interrupted. Under Dhoni's Ice-Cold doctrine, I suggest maintaining current field placements for Over ${over}.`, 
+            type: "lead" 
+          }
+        ];
+      });
+    }
   };
 
   // ── Execute recommendation action ───────────────────────────
@@ -447,7 +500,7 @@ function App() {
                         </div>
                         <div className={`rounded-2xl p-4 max-w-[85%] border shadow-sm ${inq.type === 'user' ? 'bg-surface-container border-outline-variant/30 text-right rounded-tr-none' : 'bg-surface-container-high border-primary/30 rounded-tl-none'}`}>
                           <p className="text-label-sm text-primary mb-1 font-bold">{inq.sender}</p>
-                          <p className="text-body-md">{inq.msg}</p>
+                          <div className="text-body-md whitespace-pre-wrap text-left leading-relaxed">{inq.msg}</div>
                         </div>
                       </div>
                     ))}
