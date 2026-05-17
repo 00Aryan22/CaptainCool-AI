@@ -15,7 +15,7 @@ function App() {
 
   // ── Core State Variables ─────────────────────────────────────
   const [apiKey, setApiKey] = useState<string>(() => {
-    return localStorage.getItem("GEMINI_API_KEY") || "AIzaSyCsQYDj-zwjwS9IqINCSesyLJ6PFFfk0wg";
+    return localStorage.getItem("GEMINI_API_KEY") || import.meta.env.VITE_GEMINI_API_KEY || "";
   });
 
   const [venue, setVenue] = useState<string>("MA Chidambaram Stadium");
@@ -37,6 +37,10 @@ function App() {
 
   const [captainMode, setCaptainMode] = useState<string>("Dhoni");
 
+  // ── Live Match Radar Sync States ───────────────────────────
+  const [isLiveSync, setIsLiveSync] = useState<boolean>(false);
+  const [liveEventLog, setLiveEventLog] = useState<string>("Dugout radar offline. Standing by for live telemetric sync.");
+
   // ── Swarm Engine States ──────────────────────────────────────
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [activePhase, setActivePhase] = useState<number>(0);
@@ -51,6 +55,66 @@ function App() {
   useEffect(() => {
     localStorage.setItem("GEMINI_API_KEY", apiKey);
   }, [apiKey]);
+
+  // ── Live Match Sync Simulation Loop ────────────────────────
+  useEffect(() => {
+    if (!isLiveSync) return;
+
+    const interval = setInterval(() => {
+      // 1. Calculate next ball delivery
+      setOver(prevOver => {
+        let oversInt = Math.floor(prevOver);
+        let balls = Math.round((prevOver - oversInt) * 10);
+        balls += 1;
+        if (balls >= 6) {
+          oversInt += 1;
+          balls = 0;
+        }
+        return parseFloat(`${oversInt}.${balls}`);
+      });
+
+      // 2. Random delivery event outcome
+      const roll = Math.random();
+      let eventText = "";
+
+      if (roll < 0.08) {
+        // Wicket!
+        setWickets(prev => {
+          if (prev >= 9) {
+            eventText = "🏟️ ALL OUT! Innings ended. Restarting live telemetry radar...";
+            setScore(10);
+            return 0;
+          }
+          eventText = `🛑 WICKET! ${bowler} strikes! striker is clean bowled! Wicket number ${prev + 1} falls!`;
+          return prev + 1;
+        });
+      } else if (roll < 0.20) {
+        // Six!
+        setScore(prev => prev + 6);
+        eventText = `🚀 SIX! ${striker} smashes it clean over deep mid-wicket for a colossal 96-meter maximum!`;
+      } else if (roll < 0.40) {
+        // Four!
+        setScore(prev => prev + 4);
+        eventText = `⚡ FOUR! Beautiful cover drive by ${striker}! Outfield is lightning fast!`;
+      } else if (roll < 0.70) {
+        setScore(prev => prev + 1);
+        eventText = `🏃 Single taken. ${striker} pushes it to deep sweep and rotates strike.`;
+        setStriker(() => {
+          const temp = striker;
+          setStriker(nonStriker);
+          setNonStriker(temp);
+          return nonStriker;
+        });
+      } else {
+        // Dot ball
+        eventText = `🏏 Dot ball. Perfect tight line by ${bowler}, striker swings and misses.`;
+      }
+
+      setLiveEventLog(eventText);
+    }, 4500);
+
+    return () => clearInterval(interval);
+  }, [isLiveSync, striker, nonStriker, bowler]);
 
   // ── Auto-Run Default Initial State on Chidambaram ──
   useEffect(() => {
@@ -225,7 +289,7 @@ function App() {
         <div className="flex justify-between items-center w-full px-margin-desktop py-4">
           <div className="flex items-center gap-6">
             <span className="text-headline-md font-black tracking-tighter text-primary uppercase">
-              TactiXI-AI COMMAND
+              TactiXI AI COMMAND
             </span>
             <div className="hidden md:flex items-center gap-4 text-on-surface-variant">
               <span className="text-label-sm px-3 py-1 bg-surface-container rounded-full border border-outline-variant/30 flex items-center gap-2">
@@ -325,17 +389,17 @@ function App() {
             <div className="flex items-center gap-8">
               <div>
                 <p className="text-label-sm text-secondary uppercase tracking-widest mb-1">Current Score</p>
-                <h3 className="text-headline-lg font-black text-on-surface">{score} / {wickets}</h3>
+                <h3 key={`score-${score}`} className="text-headline-lg font-black text-on-surface score-pop-active">{score} / {wickets}</h3>
               </div>
               <div className="h-12 w-px bg-outline-variant/30"></div>
               <div>
                 <p className="text-label-sm text-on-surface-variant uppercase mb-1">Overs</p>
-                <h3 className="text-headline-lg font-black text-on-surface">{over}</h3>
+                <h3 key={`over-${over}`} className="text-headline-lg font-black text-on-surface score-pop-active">{over}</h3>
               </div>
               <div className="h-12 w-px bg-outline-variant/30"></div>
               <div>
                 <p className="text-label-sm text-on-surface-variant uppercase mb-1">Target</p>
-                <h3 className="text-headline-lg font-black text-[#f72585]">{innings === 2 ? target : "N/A (1st Innings)"}</h3>
+                <h3 key={`target-${target}`} className="text-headline-lg font-black text-[#f72585] score-pop-active">{innings === 2 ? target : "N/A (1st Innings)"}</h3>
               </div>
             </div>
 
@@ -348,6 +412,43 @@ function App() {
               <span className="text-label-sm px-2 py-0.5 bg-tertiary/20 text-tertiary border border-tertiary/30 rounded uppercase font-bold">
                 {pitchCondition} Pitch
               </span>
+            </div>
+          </div>
+
+          {/* Live Match Radar & Telemetry Feed Control Bar */}
+          <div className={`glass-panel rounded-xl px-6 py-4 border-l-4 ${isLiveSync ? 'border-primary shadow-[0_0_20px_rgba(76,214,255,0.2)]' : 'border-outline-variant'} flex flex-wrap items-center justify-between gap-4 transition-all duration-300`}>
+            <div className="flex items-center gap-4 flex-1">
+              <div className="relative flex items-center justify-center">
+                <span className={`w-3 h-3 rounded-full ${isLiveSync ? 'bg-[#79ff5b] animate-ping' : 'bg-outline-variant'} absolute`}></span>
+                <span className={`w-3 h-3 rounded-full ${isLiveSync ? 'bg-[#79ff5b]' : 'bg-outline-variant'} z-10`}></span>
+              </div>
+              <div>
+                <p className="text-[10px] text-on-surface-variant font-black uppercase tracking-wider">Live Match Radar Feed</p>
+                <p className={`text-xs ${isLiveSync ? 'text-primary font-bold' : 'text-on-surface/50'} font-mono mt-0.5 transition-all`}>
+                  {liveEventLog}
+                </p>
+              </div>
+            </div>
+            
+            <div className="flex items-center gap-3">
+              <span className="text-[10px] text-on-surface-variant font-bold uppercase">Radar Sync Mode</span>
+              <button 
+                onClick={() => {
+                  setIsLiveSync(!isLiveSync);
+                  if(!isLiveSync) {
+                    setLiveEventLog("📡 Telemetric radar locked onto live match stream. Synchronizing ball-by-ball inputs...");
+                  } else {
+                    setLiveEventLog("Dugout radar offline. Standing by for live telemetric sync.");
+                  }
+                }}
+                className={`px-4 py-2 rounded-lg font-bold text-xs uppercase tracking-wider transition-all duration-300 ${
+                  isLiveSync 
+                    ? 'bg-[#79ff5b]/20 text-[#79ff5b] border border-[#79ff5b]/50 shadow-[0_0_15px_rgba(121,255,91,0.3)] hover:bg-[#79ff5b]/30' 
+                    : 'bg-surface-container-highest border border-outline-variant/30 text-on-surface/70 hover:bg-surface-container-highest/80 hover:text-white'
+                }`}
+              >
+                {isLiveSync ? "🔴 LIVE SYNC ACTIVE" : "🔌 SYNC LIVE RADAR"}
+              </button>
             </div>
           </div>
 
@@ -694,7 +795,8 @@ function App() {
                       type="range" 
                       min="100" 
                       max="250"
-                      className="w-full accent-[#f72585] bg-surface-container-highest rounded-lg h-2"
+                      disabled={isLiveSync}
+                      className={`w-full accent-[#f72585] bg-surface-container-highest rounded-lg h-2 transition-opacity ${isLiveSync ? 'opacity-40 cursor-not-allowed' : 'opacity-100'}`}
                       value={target}
                       onChange={(e) => setTarget(Number(e.target.value))}
                     />
@@ -709,7 +811,8 @@ function App() {
                       type="range" 
                       min="0" 
                       max={target}
-                      className="w-full accent-[#f72585] bg-surface-container-highest rounded-lg h-2"
+                      disabled={isLiveSync}
+                      className={`w-full accent-[#f72585] bg-surface-container-highest rounded-lg h-2 transition-opacity ${isLiveSync ? 'opacity-40 cursor-not-allowed' : 'opacity-100'}`}
                       value={score}
                       onChange={(e) => setScore(Number(e.target.value))}
                     />
@@ -724,7 +827,8 @@ function App() {
                       type="range" 
                       min="0" 
                       max="9"
-                      className="w-full accent-[#f72585] bg-surface-container-highest rounded-lg h-2"
+                      disabled={isLiveSync}
+                      className={`w-full accent-[#f72585] bg-surface-container-highest rounded-lg h-2 transition-opacity ${isLiveSync ? 'opacity-40 cursor-not-allowed' : 'opacity-100'}`}
                       value={wickets}
                       onChange={(e) => setWickets(Number(e.target.value))}
                     />
@@ -740,7 +844,8 @@ function App() {
                       min="0.1" 
                       max="20" 
                       step="0.1"
-                      className="w-full accent-[#f72585] bg-surface-container-highest rounded-lg h-2"
+                      disabled={isLiveSync}
+                      className={`w-full accent-[#f72585] bg-surface-container-highest rounded-lg h-2 transition-opacity ${isLiveSync ? 'opacity-40 cursor-not-allowed' : 'opacity-100'}`}
                       value={over}
                       onChange={(e) => setOver(Number(e.target.value))}
                     />
@@ -855,7 +960,8 @@ function App() {
                 <div className="flex flex-col gap-2">
                   <label className="text-label-sm font-bold text-white">🧠 Captain DNA Persona</label>
                   <select 
-                    className="bg-surface-container-low border-2 border-outline-variant/50 rounded-lg p-3 text-white focus:ring-2 focus:ring-primary"
+                    disabled={isLiveSync}
+                    className={`bg-surface-container-low border-2 border-outline-variant/50 rounded-lg p-3 text-white focus:ring-2 focus:ring-primary transition-opacity ${isLiveSync ? 'opacity-40 cursor-not-allowed' : 'opacity-100'}`}
                     value={captainMode}
                     onChange={(e) => setCaptainMode(e.target.value)}
                   >
@@ -869,7 +975,8 @@ function App() {
                 <div className="flex flex-col gap-2">
                   <label className="text-label-sm font-bold text-white">🏟️ Stadium Venue</label>
                   <select 
-                    className="bg-surface-container-low border-2 border-outline-variant/50 rounded-lg p-3 text-white focus:ring-2 focus:ring-primary"
+                    disabled={isLiveSync}
+                    className={`bg-surface-container-low border-2 border-outline-variant/50 rounded-lg p-3 text-white focus:ring-2 focus:ring-primary transition-opacity ${isLiveSync ? 'opacity-40 cursor-not-allowed' : 'opacity-100'}`}
                     value={venue}
                     onChange={(e) => setVenue(e.target.value)}
                   >
@@ -886,7 +993,8 @@ function App() {
                 <div className="flex flex-col gap-2">
                   <label className="text-label-sm font-bold text-white">⚡ Soil Condition Turf</label>
                   <select 
-                    className="bg-surface-container-low border-2 border-outline-variant/50 rounded-lg p-3 text-white"
+                    disabled={isLiveSync}
+                    className={`bg-surface-container-low border-2 border-outline-variant/50 rounded-lg p-3 text-white transition-opacity ${isLiveSync ? 'opacity-40 cursor-not-allowed' : 'opacity-100'}`}
                     value={pitchCondition}
                     onChange={(e) => setPitchCondition(e.target.value)}
                   >
@@ -905,7 +1013,8 @@ function App() {
                       <span className="text-[10px] text-on-surface-variant block mb-1">Score</span>
                       <input 
                         type="number" 
-                        className="bg-surface-container-low border-2 border-outline-variant/50 rounded-lg p-2 text-white w-full"
+                        disabled={isLiveSync}
+                        className={`bg-surface-container-low border-2 border-outline-variant/50 rounded-lg p-2 text-white w-full transition-opacity ${isLiveSync ? 'opacity-40 cursor-not-allowed' : 'opacity-100'}`}
                         value={score}
                         onChange={(e) => setScore(Number(e.target.value))}
                       />
@@ -914,7 +1023,8 @@ function App() {
                       <span className="text-[10px] text-on-surface-variant block mb-1">Wickets</span>
                       <input 
                         type="number" 
-                        className="bg-surface-container-low border-2 border-outline-variant/50 rounded-lg p-2 text-white w-full"
+                        disabled={isLiveSync}
+                        className={`bg-surface-container-low border-2 border-outline-variant/50 rounded-lg p-2 text-white w-full transition-opacity ${isLiveSync ? 'opacity-40 cursor-not-allowed' : 'opacity-100'}`}
                         value={wickets}
                         onChange={(e) => setWickets(Number(e.target.value))}
                       />
@@ -924,7 +1034,8 @@ function App() {
                       <input 
                         type="number" 
                         step="0.1"
-                        className="bg-surface-container-low border-2 border-outline-variant/50 rounded-lg p-2 text-white w-full"
+                        disabled={isLiveSync}
+                        className={`bg-surface-container-low border-2 border-outline-variant/50 rounded-lg p-2 text-white w-full transition-opacity ${isLiveSync ? 'opacity-40 cursor-not-allowed' : 'opacity-100'}`}
                         value={over}
                         onChange={(e) => setOver(Number(e.target.value))}
                       />
@@ -939,7 +1050,8 @@ function App() {
                     <div>
                       <span className="text-[10px] text-on-surface-variant block mb-1">Innings</span>
                       <select 
-                        className="bg-surface-container-low border-2 border-outline-variant/50 rounded-lg p-2 text-white w-full"
+                        disabled={isLiveSync}
+                        className={`bg-surface-container-low border-2 border-outline-variant/50 rounded-lg p-2 text-white w-full transition-opacity ${isLiveSync ? 'opacity-40 cursor-not-allowed' : 'opacity-100'}`}
                         value={innings}
                         onChange={(e) => setInnings(Number(e.target.value))}
                       >
@@ -951,8 +1063,8 @@ function App() {
                       <span className="text-[10px] text-on-surface-variant block mb-1">Target</span>
                       <input 
                         type="number" 
-                        disabled={innings === 1}
-                        className="bg-surface-container-low border-2 border-outline-variant/50 rounded-lg p-2 text-white w-full disabled:opacity-40"
+                        disabled={innings === 1 || isLiveSync}
+                        className={`bg-surface-container-low border-2 border-outline-variant/50 rounded-lg p-2 text-white w-full disabled:opacity-40 transition-opacity ${isLiveSync ? 'opacity-40 cursor-not-allowed' : 'opacity-100'}`}
                         value={target}
                         onChange={(e) => setTarget(Number(e.target.value))}
                       />
@@ -967,14 +1079,16 @@ function App() {
                     <input 
                       type="text" 
                       placeholder="Striker"
-                      className="bg-surface-container-low border-2 border-outline-variant/50 rounded-lg p-3 text-white"
+                      disabled={isLiveSync}
+                      className={`bg-surface-container-low border-2 border-outline-variant/50 rounded-lg p-3 text-white transition-opacity ${isLiveSync ? 'opacity-40 cursor-not-allowed' : 'opacity-100'}`}
                       value={striker}
                       onChange={(e) => setStriker(e.target.value)}
                     />
                     <input 
                       type="text" 
                       placeholder="Non-Striker"
-                      className="bg-surface-container-low border-2 border-outline-variant/50 rounded-lg p-3 text-white"
+                      disabled={isLiveSync}
+                      className={`bg-surface-container-low border-2 border-outline-variant/50 rounded-lg p-3 text-white transition-opacity ${isLiveSync ? 'opacity-40 cursor-not-allowed' : 'opacity-100'}`}
                       value={nonStriker}
                       onChange={(e) => setNonStriker(e.target.value)}
                     />
@@ -987,7 +1101,8 @@ function App() {
                   <input 
                     type="text"
                     placeholder="Bowler"
-                    className="bg-surface-container-low border-2 border-outline-variant/50 rounded-lg p-3 text-white"
+                    disabled={isLiveSync}
+                    className={`bg-surface-container-low border-2 border-outline-variant/50 rounded-lg p-3 text-white transition-opacity ${isLiveSync ? 'opacity-40 cursor-not-allowed' : 'opacity-100'}`}
                     value={bowler}
                     onChange={(e) => setBowler(e.target.value)}
                   />
@@ -1000,14 +1115,16 @@ function App() {
                     <input 
                       type="text" 
                       placeholder="Batting Team"
-                      className="bg-surface-container-low border-2 border-outline-variant/50 rounded-lg p-3 text-white"
+                      disabled={isLiveSync}
+                      className={`bg-surface-container-low border-2 border-outline-variant/50 rounded-lg p-3 text-white transition-opacity ${isLiveSync ? 'opacity-40 cursor-not-allowed' : 'opacity-100'}`}
                       value={battingTeam}
                       onChange={(e) => setBattingTeam(e.target.value)}
                     />
                     <input 
                       type="text" 
                       placeholder="Bowling Team"
-                      className="bg-surface-container-low border-2 border-outline-variant/50 rounded-lg p-3 text-white"
+                      disabled={isLiveSync}
+                      className={`bg-surface-container-low border-2 border-outline-variant/50 rounded-lg p-3 text-white transition-opacity ${isLiveSync ? 'opacity-40 cursor-not-allowed' : 'opacity-100'}`}
                       value={bowlingTeam}
                       onChange={(e) => setBowlingTeam(e.target.value)}
                     />
@@ -1018,7 +1135,8 @@ function App() {
                 <div className="flex flex-col gap-2">
                   <label className="text-label-sm font-bold text-white">💧 Dew Factor</label>
                   <select 
-                    className="bg-surface-container-low border-2 border-outline-variant/50 rounded-lg p-3 text-white"
+                    disabled={isLiveSync}
+                    className={`bg-surface-container-low border-2 border-outline-variant/50 rounded-lg p-3 text-white transition-opacity ${isLiveSync ? 'opacity-40 cursor-not-allowed' : 'opacity-100'}`}
                     value={dew}
                     onChange={(e) => setDew(e.target.value)}
                   >
@@ -1033,7 +1151,8 @@ function App() {
                   <label className="text-label-sm font-bold text-white">🏃 Bowlers Completed Overs</label>
                   <textarea
                     rows={2}
-                    className="bg-surface-container-low border-2 border-outline-variant/50 rounded-lg p-3 text-white"
+                    disabled={isLiveSync}
+                    className={`bg-surface-container-low border-2 border-outline-variant/50 rounded-lg p-3 text-white transition-opacity ${isLiveSync ? 'opacity-40 cursor-not-allowed' : 'opacity-100'}`}
                     value={bowlersUsed}
                     onChange={(e) => setBowlersUsed(e.target.value)}
                   />

@@ -743,3 +743,24 @@ input:focus, select:focus, textarea:focus {
   }
 }
 
+/* 8. Live Match Telemetry Value Pop Glow Animation */
+@keyframes score-pop-glow {
+  0% {
+    transform: scale(1);
+    text-shadow: none;
+  }
+  40% {
+    transform: scale(1.12);
+    text-shadow: 0 0 25px rgba(76, 214, 255, 0.9), 0 0 40px rgba(76, 214, 255, 0.4);
+    color: #4cd6ff !important;
+  }
+  100% {
+    transform: scale(1);
+    text-shadow: none;
+  }
+}
+.score-pop-active {
+  animation: score-pop-glow 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+  display: inline-block;
+}
+

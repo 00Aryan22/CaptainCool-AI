@@ -1,4 +1,4 @@
-# 🏆 TactiXI-AI — IPL Multi-Agent Strategy Swarm 🏏
+# 🏆 TactiXI AI — IPL Multi-Agent Strategy Swarm 🏏
 
 [![Vercel Ready](https://img.shields.io/badge/Deploy-Vercel-black?style=for-the-badge&logo=vercel)](https://vercel.com)
 [![Vite](https://img.shields.io/badge/Vite-v8.0-646CFF?style=for-the-badge&logo=vite)](https://vitejs.dev)
@@ -6,14 +6,14 @@
 [![TypeScript](https://img.shields.io/badge/TypeScript-v5.0-3178C6?style=for-the-badge&logo=typescript)](https://www.typescriptlang.org)
 [![Google Gemini API](https://img.shields.io/badge/Powered%20By-Google%20Gemini%202.5-orange?style=for-the-badge&logo=google)](https://ai.google.dev)
 
-Welcome to **TactiXI-AI**, an elite multi-agent swarm platform that simulates professional Indian Premier League (IPL) captain decisions in real-time. Engineered for high-stakes, national-level hackathons, this platform transforms raw match statistics, soil conditions, stadium dimensions, and environmental metrics into perfect strategic bowling and fielding blueprints.
+Welcome to **TactiXI AI**, an elite multi-agent swarm platform that simulates professional Indian Premier League (IPL) captain decisions in real-time. Engineered for high-stakes, national-level hackathons, this platform transforms raw match statistics, soil conditions, stadium dimensions, and environmental metrics into perfect strategic bowling and fielding blueprints.
 
 ---
 
 ## 🎨 Interactive Live Dashboard Preview
 The application is structured as a premium **Single-Page Application** featuring a deep-space glassmorphism visual system, glowing borders, custom HSL range selectors, and maximum contrast accessibility.
 
-![TactiXI-AI Cover Art](/cover_art.png)
+![TactiXI AI Cover Art](/cover_art.png)
 
 ---
 

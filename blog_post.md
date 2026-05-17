@@ -1,4 +1,4 @@
-# 🏏 TactiXI-AI — Real-Time Multi-Agent IPL Strategy Swarm
+# 🏏 TactiXI AI — Real-Time Multi-Agent IPL Strategy Swarm
 
 > **How we built a context-aware strategic co-pilot for IPL dugouts, powered by Google Gemini 2.5, the Agent Development Kit (ADK), and live mathematical run-rate telemetry.**
 
@@ -7,7 +7,7 @@
 ## 💡 The Inspiration
 Cricket is no longer just a game of physical prowess; it is a game of high-dimensional numbers, millisecond decision-making, and structural tactics. A single ball can swing a team’s win probability by 30%. While head coaches and captains rely on intuition and basic stats sheets in the dugout, we saw an opportunity to build a **real-time AI tactical co-pilot** that behaves like a full war-room of cricket analysts.
 
-**TactiXI-AI** is a state-of-the-art Multi-Agent Swarm that ingests live match states (score, wickets, overs, stadium boundary dimensions, pitch conditions, dew factor) and orchestrates a sequential debate between highly specialized AI roles to formulate the optimal captain’s decision.
+**TactiXI AI** is a state-of-the-art Multi-Agent Swarm that ingests live match states (score, wickets, overs, stadium boundary dimensions, pitch conditions, dew factor) and orchestrates a sequential debate between highly specialized AI roles to formulate the optimal captain’s decision.
 
 ---
 
@@ -67,10 +67,11 @@ Designed to look stunning on high-contrast projector displays at the national ha
 *   **harmonic Color System:** Sleek dark-mode aesthetic with curated neon accents—electric cyan (`#4cd6ff`) for primary highlights and glowing hot pink (`#f72585`) for critical alerts.
 *   **Breathtaking Micro-Animations:** Every glass panel pops up dynamically on hover with a smooth scale-up effect (`scale(1.015)`) and a soft neon glow. Sliders hover-expand and buttons breathe using high-frequency CSS keyframes.
 *   **Dugout Strategic Chatbot:** Integrated a real-time strategical co-pilot chat feed where coaches can type questions (e.g. *“Which player to swap now?”*, *“Should we use our Impact Player?”*) and get immediate, context-aware answers incorporating live scoreboard stats and historic over-by-over recommendations!
+*   **Real-time Cybernetic Radar Feed:** Features a Live Match Sync Radar mode that simulates ball-by-ball match updates (runs, wickets, overs, striker rotations, dot balls, boundary shots) in real-time. When synced, values pop and pulse with glowing CSS glow filters, while the entire multi-agent swarm pipeline automatically re-triggers and updates strategic field suggestions instantly!
 
 ---
 
 ## 🚀 Impact & Future Scope
-By uniting **Multi-Agent generative debate** with **grounded deterministic math matrices**, TactiXI-AI proves how agentic swarms can serve as direct decision-support tools in professional sports. Future expansions include integrating live ball-by-ball web scraping from ESPNCricinfo and feeding real-time player fatigue biometric telemetry!
+By uniting **Multi-Agent generative debate** with **grounded deterministic math matrices**, TactiXI AI proves how agentic swarms can serve as direct decision-support tools in professional sports. Future expansions include integrating live ball-by-ball web scraping from ESPNCricinfo and feeding real-time player fatigue biometric telemetry!
 
 *Built with passion, coffee, and agentic AI for the National Developer Hackathon! 🏆*
